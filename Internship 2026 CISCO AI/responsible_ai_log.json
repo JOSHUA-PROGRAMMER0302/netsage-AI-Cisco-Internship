@@ -1,0 +1,42 @@
+[
+  {
+    "reviewed_at": "2026-08-27T17:19:08.481897+00:00",
+    "decision": "Accepted",
+    "correction_notes": "Correct ",
+    "symptom": "Branch router cannot route traffic toward Branch Office 2 (172.16.2.0/24). Pings drop at gateway.",
+    "fault_type": "Routing",
+    "ai_confidence": "High"
+  },
+  {
+    "reviewed_at": "2026-08-27T17:23:59.922817+00:00",
+    "decision": "Accepted",
+    "correction_notes": "Correct ",
+    "symptom": "VLAN 47 clients cannot reach the server subnet in VLAN 10. Gateway ping fails.",
+    "fault_type": "VLAN",
+    "ai_confidence": "High"
+  },
+  {
+    "reviewed_at": "2026-08-27T17:26:41.702635+00:00",
+    "decision": "Accepted",
+    "correction_notes": "Correct ",
+    "symptom": "Branch router cannot route traffic toward Branch Office 2 (172.16.2.0/24). Pings drop at gateway.",
+    "fault_type": "Routing",
+    "ai_confidence": "High"
+  },
+  {
+    "reviewed_at": "2026-08-27T17:28:50.031231+00:00",
+    "decision": "Accepted",
+    "correction_notes": "Correct ",
+    "symptom": "Workstation PC-1 gets an IP address manually configured but cannot communicate with local peers or the default gateway.",
+    "fault_type": "Other",
+    "ai_confidence": "High"
+  },
+  {
+    "reviewed_at": "2026-08-28T08:46:48.687771+00:00",
+    "decision": "Accepted",
+    "correction_notes": "",
+    "symptom": "Host 192.168.20.15 in Sales cannot access Database Server 10.1.1.50 over HTTP/HTTPS.",
+    "fault_type": "Other",
+    "ai_confidence": "High"
+  }
+]

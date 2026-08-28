@@ -1,0 +1,541 @@
+Symptom,Topology Note,Show Outputs,Expected Fault,OSI Layer,Concept Tag,Severity
+Inter-VLAN clients cannot reach the gateway,router-on-a-stick; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.84.112.1     YES DHCP  up                     up
+GigabitEthernet0/2     10.61.47.1      YES DHCP  up                     up
+Vlan112                10.84.112.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.84.112.0/27 is directly connected, Vlan0
+O    10.61.47.0/26 [110/20] via 10.61.47.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 212
+    10 permit ip any any (hitcnt=38)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",subinterface encapsulation mismatch,Layer 2,inter-vlan-routing,High
+Only one VLAN can reach remote networks,router-on-a-stick; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.61.47.1      YES DHCP  up                     up
+GigabitEthernet0/2     172.29.88.1     YES DHCP  up                     up
+Vlan47                 10.61.47.1      YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.61.47.0/26 is directly connected, Vlan0
+O    172.29.88.0/25 [110/20] via 172.29.88.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 147
+    10 permit ip any any (hitcnt=2)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",trunk allows an incomplete VLAN list,Layer 2,inter-vlan-routing,High
+Hosts in a new VLAN receive no inter-VLAN replies,multilayer switch; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     192.168.141.1   YES DHCP  up                     up
+GigabitEthernet0/2     172.29.88.1     YES DHCP  up                     up
+Vlan141                192.168.141.1   YES DHCP  administratively down  down
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    192.168.141.0/26 is directly connected, Vlan0
+O    172.29.88.0/25 [110/20] via 172.29.88.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 241
+    10 permit ip any any (hitcnt=4)
+    20 deny tcp any any eq 443 (hitcnt=3)
+    30 permit ip any any (hitcnt=0)",SVI is administratively down,Layer 3,inter-vlan-routing,High
+Inter-VLAN pings fail after an addressing change,multilayer switch; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.84.112.1     YES DHCP  up                     up
+GigabitEthernet0/2     192.168.141.1   YES DHCP  up                     up
+Vlan112                10.84.112.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.84.112.0/27 is directly connected, Vlan0
+O    192.168.141.0/26 [110/20] via 192.168.141.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 212
+    10 permit ip any any (hitcnt=18)
+    20 deny tcp any any eq 443 (hitcnt=1)
+    30 permit ip any any (hitcnt=0)",SVI and host subnet masks disagree,Layer 3,inter-vlan-routing,High
+One department cannot reach its server VLAN,router-on-a-stick; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.61.47.1      YES DHCP  up                     up
+GigabitEthernet0/2     10.61.47.1      YES DHCP  up                     up
+Vlan47                 10.61.47.1      YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.61.47.0/26 is directly connected, Vlan0
+O    10.61.47.0/26 [110/20] via 10.61.47.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 147
+    10 permit ip any any (hitcnt=4)
+    20 deny tcp any any eq 443 (hitcnt=1)
+    30 permit ip any any (hitcnt=0)",native VLAN mismatch causes tagged traffic loss,Layer 2,inter-vlan-routing,Critical
+VLAN 141 users can reach local hosts but not the WAN,multilayer switch; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.22.31.1     YES DHCP  up                     up
+GigabitEthernet0/2     10.84.112.1     YES DHCP  up                     up
+Vlan31                 172.22.31.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.22.31.0/27 is directly connected, Vlan0
+O    10.84.112.0/27 [110/20] via 10.84.112.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 131
+    10 permit ip any any (hitcnt=4)
+    20 deny tcp any any eq 443 (hitcnt=3)
+    30 permit ip any any (hitcnt=0)",ip routing is disabled on the switch,Layer 3,inter-vlan-routing,High
+A routed VLAN works from the router but not from clients,router-on-a-stick; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.61.47.1      YES DHCP  up                     up
+GigabitEthernet0/2     192.168.141.1   YES DHCP  up                     up
+Vlan47                 10.61.47.1      YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.61.47.0/26 is directly connected, Vlan0
+O    192.168.141.0/26 [110/20] via 192.168.141.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 147
+    10 permit ip any any (hitcnt=29)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",default gateway points at the wrong subinterface,Layer 3,inter-vlan-routing,High
+New finance VLAN is isolated from every other VLAN,multilayer switch; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     192.168.141.1   YES DHCP  up                     up
+GigabitEthernet0/2     10.84.112.1     YES DHCP  up                     up
+Vlan141                192.168.141.1   YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    192.168.141.0/26 is directly connected, Vlan0
+O    10.84.112.0/27 [110/20] via 10.84.112.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 241
+    10 permit ip any any (hitcnt=28)
+    20 deny tcp any any eq 443 (hitcnt=0)
+    30 permit ip any any (hitcnt=0)",SVI has an overlapping network,Layer 3,inter-vlan-routing,Critical
+Clients intermittently lose access between VLANs,multilayer switch; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     192.168.63.1    YES DHCP  up                     up
+GigabitEthernet0/2     192.168.141.1   YES DHCP  up                     up
+Vlan63                 192.168.63.1    YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    192.168.63.0/28 is directly connected, Vlan0
+O    192.168.141.0/26 [110/20] via 192.168.141.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 163
+    10 permit ip any any (hitcnt=29)
+    20 deny tcp any any eq 443 (hitcnt=2)
+    30 permit ip any any (hitcnt=0)",duplicate HSRP virtual address,Layer 3,inter-vlan-routing,High
+A trunked access block cannot reach the core VLAN,router-on-a-stick; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.61.47.1      YES DHCP  up                     up
+GigabitEthernet0/2     172.22.31.1     YES DHCP  up                     up
+Vlan47                 10.61.47.1      YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.61.47.0/26 is directly connected, Vlan0
+O    172.22.31.0/27 [110/20] via 172.22.31.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 147
+    10 permit ip any any (hitcnt=23)
+    20 deny tcp any any eq 443 (hitcnt=1)
+    30 permit ip any any (hitcnt=0)",switchport is left in access mode,Layer 2,inter-vlan-routing,High
+New wireless clients report DHCP timeout,central DHCP server; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.29.88.1     YES DHCP  up                     up
+GigabitEthernet0/2     172.29.88.126   YES DHCP  up                     up
+Vlan88                 172.29.88.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.29.88.0/25 is directly connected, Vlan0
+O    10.84.112.0/27 [110/20] via 10.84.112.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 188
+    10 permit ip any any (hitcnt=38)
+    20 deny tcp any any eq 443 (hitcnt=1)
+    30 permit ip any any (hitcnt=0)",scope has no free leases,Layer 7,dhcp-exhaustion,High
+IoT devices stop receiving addresses while laptops work,central DHCP server; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     192.168.63.1    YES DHCP  up                     up
+GigabitEthernet0/2     192.168.63.14   YES DHCP  up                     up
+Vlan63                 192.168.63.1    YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    192.168.63.0/28 is directly connected, Vlan0
+O    192.168.141.0/26 [110/20] via 192.168.141.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 163
+    10 permit ip any any (hitcnt=8)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",small IoT pool is exhausted,Layer 7,dhcp-exhaustion,Medium
+A remote access switch gets APIPA addresses,DHCP relay; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     192.168.141.1   YES DHCP  up                     up
+GigabitEthernet0/2     192.168.141.62  YES DHCP  up                     up
+Vlan141                192.168.141.1   YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    192.168.141.0/26 is directly connected, Vlan0
+O    172.29.88.0/25 [110/20] via 172.29.88.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 241
+    10 permit ip any any (hitcnt=26)
+    20 deny tcp any any eq 443 (hitcnt=1)
+    30 permit ip any any (hitcnt=0)",ip helper-address is absent,Layer 3,dhcp-exhaustion,High
+Guest clients cannot renew leases,central DHCP server; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     192.168.141.1   YES DHCP  up                     up
+GigabitEthernet0/2     192.168.141.62  YES DHCP  up                     up
+Vlan141                192.168.141.1   YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    192.168.141.0/26 is directly connected, Vlan0
+O    192.168.141.0/26 [110/20] via 192.168.141.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 241
+    10 permit ip any any (hitcnt=34)
+    20 deny tcp any any eq 443 (hitcnt=0)
+    30 permit ip any any (hitcnt=0)",excluded range consumes the entire guest pool,Layer 7,dhcp-exhaustion,High
+Printers fail to join after a lab expansion,central DHCP server; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.29.88.1     YES DHCP  up                     up
+GigabitEthernet0/2     172.29.88.126   YES DHCP  up                     up
+Vlan88                 172.29.88.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.29.88.0/25 is directly connected, Vlan0
+O    172.29.88.0/25 [110/20] via 172.29.88.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 188
+    10 permit ip any any (hitcnt=14)
+    20 deny tcp any any eq 443 (hitcnt=3)
+    30 permit ip any any (hitcnt=0)",lease database reached its allocation limit,Layer 7,dhcp-exhaustion,Medium
+Voice handsets receive data VLAN addresses,router-on-a-stick; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.29.88.1     YES DHCP  up                     up
+GigabitEthernet0/2     172.29.88.126   YES DHCP  up                     up
+Vlan88                 172.29.88.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.29.88.0/25 is directly connected, Vlan0
+O    172.29.88.0/25 [110/20] via 172.29.88.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 188
+    10 permit ip any any (hitcnt=28)
+    20 deny tcp any any eq 443 (hitcnt=1)
+    30 permit ip any any (hitcnt=0)",voice DHCP scope has no matching option,Layer 7,dhcp-exhaustion,High
+A branch subnet has no usable DHCP addresses,DHCP relay; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     192.168.141.1   YES DHCP  up                     up
+GigabitEthernet0/2     192.168.141.62  YES DHCP  up                     up
+Vlan141                192.168.141.1   YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    192.168.141.0/26 is directly connected, Vlan0
+O    10.61.47.0/26 [110/20] via 10.61.47.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 241
+    10 permit ip any any (hitcnt=2)
+    20 deny tcp any any eq 443 (hitcnt=2)
+    30 permit ip any any (hitcnt=0)",relay targets a decommissioned server,Layer 3,dhcp-exhaustion,High
+Clients keep an old address after moving ports,central DHCP server; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.61.47.1      YES DHCP  up                     up
+GigabitEthernet0/2     10.61.47.62     YES DHCP  up                     up
+Vlan47                 10.61.47.1      YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.61.47.0/26 is directly connected, Vlan0
+O    192.168.141.0/26 [110/20] via 192.168.141.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 147
+    10 permit ip any any (hitcnt=18)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",stale leases were not cleared,Layer 7,dhcp-exhaustion,Medium
+A restricted lab fills its pool within minutes,central DHCP server; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.29.88.1     YES DHCP  up                     up
+GigabitEthernet0/2     172.29.88.126   YES DHCP  up                     up
+Vlan88                 172.29.88.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.29.88.0/25 is directly connected, Vlan0
+O    192.168.141.0/26 [110/20] via 192.168.141.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 188
+    10 permit ip any any (hitcnt=21)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",rogue clients consume the dynamic range,Layer 2,dhcp-exhaustion,Critical
+DHCP works on one floor but not the other,DHCP relay; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.61.47.1      YES DHCP  up                     up
+GigabitEthernet0/2     10.61.47.62     YES DHCP  up                     up
+Vlan47                 10.61.47.1      YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.61.47.0/26 is directly connected, Vlan0
+O    192.168.141.0/26 [110/20] via 192.168.141.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 147
+    10 permit ip any any (hitcnt=31)
+    20 deny tcp any any eq 443 (hitcnt=1)
+    30 permit ip any any (hitcnt=0)",relay interface is in the wrong VRF,Layer 3,dhcp-exhaustion,High
+Remote site has no route to the application subnet,OSPF point-to-point WAN; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.29.88.1     YES DHCP  up                     up
+GigabitEthernet0/2     172.22.31.1     YES DHCP  up                     up
+Vlan88                 172.29.88.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.29.88.0/25 is directly connected, Vlan0
+O    172.22.31.0/27 [110/20] via 172.22.31.1, 00:04:12, GigabitEthernet0/1
+! No candidate default route is present
+
+show access-lists
+Extended IP access list 188
+    10 permit ip any any (hitcnt=30)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",network statement omits the transit prefix,Layer 3,dynamic-routing,High
+A static route never appears in the routing table,dual-router edge; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.84.112.1     YES DHCP  up                     up
+GigabitEthernet0/2     192.168.141.1   YES DHCP  up                     up
+Vlan112                10.84.112.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.84.112.0/27 is directly connected, Vlan0
+O    192.168.141.0/26 [110/20] via 192.168.141.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 212
+    10 permit ip any any (hitcnt=33)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",next hop is not recursively reachable,Layer 3,static-routing,High
+Users can browse internally but not outside the campus,edge NAT router; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.29.88.1     YES DHCP  up                     up
+GigabitEthernet0/2     10.84.112.1     YES DHCP  up                     up
+Vlan88                 172.29.88.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.29.88.0/25 is directly connected, Vlan0
+O    10.84.112.0/27 [110/20] via 10.84.112.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 188
+    10 permit ip any any (hitcnt=14)
+    20 deny tcp any any eq 443 (hitcnt=2)
+    30 permit ip any any (hitcnt=0)",inside interface is marked as outside,Layer 3,nat,Critical
+HTTPS to a server is denied while ping succeeds,firewall-on-a-stick; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     192.168.141.1   YES DHCP  up                     up
+GigabitEthernet0/2     172.22.31.1     YES DHCP  up                     up
+Vlan141                192.168.141.1   YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    192.168.141.0/26 is directly connected, Vlan0
+O    172.22.31.0/27 [110/20] via 172.22.31.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 241
+    10 permit ip any any (hitcnt=30)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",extended ACL has an overbroad deny,Layer 3,access-control,High
+Only return traffic is missing on a routed link,three-router chain; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.29.88.1     YES DHCP  up                     up
+GigabitEthernet0/2     192.168.63.1    YES DHCP  up                     up
+Vlan88                 172.29.88.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.29.88.0/25 is directly connected, Vlan0
+O    192.168.63.0/28 [110/20] via 192.168.63.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 188
+    10 permit ip any any (hitcnt=34)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",ACL applied in the wrong direction,Layer 3,access-control,High
+A serial link shows down/down,legacy serial WAN; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.22.31.1     YES DHCP  up                     up
+GigabitEthernet0/2     172.22.31.1     YES DHCP  up                     up
+Vlan31                 172.22.31.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.22.31.0/27 is directly connected, Vlan0
+O    172.22.31.0/27 [110/20] via 172.22.31.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 131
+    10 permit ip any any (hitcnt=4)
+    20 deny tcp any any eq 443 (hitcnt=2)
+    30 permit ip any any (hitcnt=0)",DCE side has no clock rate,Layer 1,wan-encapsulation,Critical
+Neighbors form but routes never exchange,OSPF multi-area; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     10.61.47.1      YES DHCP  up                     up
+GigabitEthernet0/2     10.61.47.1      YES DHCP  up                     up
+Vlan47                 10.61.47.1      YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    10.61.47.0/26 is directly connected, Vlan0
+O    10.61.47.0/26 [110/20] via 10.61.47.1, 00:04:12, GigabitEthernet0/1
+! No candidate default route is present
+
+show access-lists
+Extended IP access list 147
+    10 permit ip any any (hitcnt=15)
+    20 deny tcp any any eq 443 (hitcnt=3)
+    30 permit ip any any (hitcnt=0)",area IDs differ on the shared segment,Layer 3,dynamic-routing,High
+The backup link is selected instead of fiber,floating static routes; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.22.31.1     YES DHCP  up                     up
+GigabitEthernet0/2     10.61.47.1      YES DHCP  up                     up
+Vlan31                 172.22.31.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.22.31.0/27 is directly connected, Vlan0
+O    10.61.47.0/26 [110/20] via 10.61.47.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 131
+    10 permit ip any any (hitcnt=19)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",primary administrative distance is too high,Layer 3,path-selection,Medium
+Switch management becomes unreachable after a reload,layer-2 management VLAN; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     172.29.88.1     YES DHCP  up                     up
+GigabitEthernet0/2     10.61.47.1      YES DHCP  up                     up
+Vlan88                 172.29.88.1     YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    172.29.88.0/25 is directly connected, Vlan0
+O    10.61.47.0/26 [110/20] via 10.61.47.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 188
+    10 permit ip any any (hitcnt=31)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",management SVI lacks an active access port,Layer 2,switch-management,Medium
+A server is reachable by IP but not by name,internal DNS segment; VLANs are non-default and addressing is drawn from a private lab range.,"show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     unassigned      YES unset  up                    up
+GigabitEthernet0/1     192.168.141.1   YES DHCP  up                     up
+GigabitEthernet0/2     172.29.88.1     YES DHCP  up                     up
+Vlan141                192.168.141.1   YES DHCP  up                     up
+
+show ip route
+Codes: C - connected, S - static, O - OSPF, D - EIGRP, * - candidate default
+C    192.168.141.0/26 is directly connected, Vlan0
+O    172.29.88.0/25 [110/20] via 172.29.88.1, 00:04:12, GigabitEthernet0/1
+S*   0.0.0.0/0 [1/0] via 10.19.240.1
+
+show access-lists
+Extended IP access list 241
+    10 permit ip any any (hitcnt=38)
+    20 deny tcp any any eq 443 (hitcnt=4)
+    30 permit ip any any (hitcnt=0)",DHCP hands out the wrong DNS server,Layer 7,name-resolution,Medium
